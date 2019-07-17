@@ -15,6 +15,7 @@
  */
 
 var http = require('http');
+var https = require('https');
 var util = require('util');
 var xml2js = require('xml2js');
 var xmlbuilder = require('xmlbuilder');
@@ -28,7 +29,7 @@ var db_sql = require('./sql_action');
 
 _this = this;
 
-function retrieve_CSEBase_http(cbname, cbhost, cbhostport, callback) {
+function retrieve_CSEBase_http(cbname, cbhost, cbhostport, useHttps, callback) {
     var ri = '/' + cbname;
     var rqi = moment().utc().format('mmssSSS') + randomValueBase64(4);
     var options = {
@@ -44,7 +45,7 @@ function retrieve_CSEBase_http(cbname, cbhost, cbhostport, callback) {
         }
     };
 
-    var req = http.request(options, function (res) {
+    var resHandlers = res => {
         var fullBody = '';
         res.on('data', function(chunk) {
             fullBody += chunk.toString();
@@ -115,7 +116,13 @@ function retrieve_CSEBase_http(cbname, cbhost, cbhostport, callback) {
 
             }
         });
-    });
+    };
+
+    var req;
+    if (useHttps)
+        req = https.request(options, resHandlers);
+    else
+        req = http.request(options, resHandlers);
 
     req.on('error', function (e) {
         console.log('[retrieve_CSEBase_http - mn] problem with request: ' + e.message);
@@ -127,7 +134,7 @@ function retrieve_CSEBase_http(cbname, cbhost, cbhostport, callback) {
     req.end();
 }
 
-function create_remoteCSE_http(cbname, cbhost, cbhostport, body_Obj, callback) {
+function create_remoteCSE_http(cbname, cbhost, cbhostport, body_Obj, useHttps, callback) {
     var rootnm = 'csr';
 
     body_Obj['m2m:' + rootnm] = body_Obj[rootnm];
@@ -186,7 +193,7 @@ function create_remoteCSE_http(cbname, cbhost, cbhostport, body_Obj, callback) {
         }
     };
 
-    var req = http.request(options, function (res) {
+    var resHandlers = res => {
         var fullBody = '';
         res.on('data', function(chunk) {
             fullBody += chunk.toString();
@@ -194,7 +201,13 @@ function create_remoteCSE_http(cbname, cbhost, cbhostport, body_Obj, callback) {
         res.on('end', function() {
             callback(res.statusCode);
         });
-    });
+    }
+
+    var req;
+    if (useHttps)
+        req = https.request(options, resHandlers);
+    else
+        req = http.request(options, resHandlers);
 
     req.on('error', function (e) {
         console.log('[create_remoteCSE_http - mn] problem with request: ' + e.message);
@@ -253,12 +266,12 @@ exports.build_asn = function(ri, callback) {
                                 delete rspObj.csr.srt;
                             }
                             
-                            if(parent_cbprotocol == 'http') {
-                                create_remoteCSE_http(parent_cbname, parent_cbhost, parent_cbhostport, rspObj, function (rsc) {
+                            if(parent_cbprotocol == 'http' || parent_cbprotocol == 'https') {
+                                create_remoteCSE_http(parent_cbname, parent_cbhost, parent_cbhostport, rspObj, (parent_cbprotocol == https), function (rsc) {
                                     if (rsc == 200 || rsc == 201 || rsc == 403 || rsc == 409) {
-                                        retrieve_CSEBase_http(parent_cbname, parent_cbhost, parent_cbhostport, function (rsc, jsonObj) {
+                                        retrieve_CSEBase_http(parent_cbname, parent_cbhost, parent_cbhostport, (parent_cbprotocol == https), function (rsc, jsonObj) {
                                             if (rsc == 200 || rsc == 201 || rsc == 403 || rsc == 409) {
-                                                create_remoteCSE_http(usecsebase, 'localhost', usecsebaseport, jsonObj, function (rsc) {
+                                                create_remoteCSE_http(usecsebase, 'localhost', usecsebaseport, jsonObj, false, function (rsc) {
                                                     if (rsc == 200 || rsc == 201 || rsc == 403 || rsc == 409) {
                                                         rspObj = {};
                                                         rspObj.rsc = '2000';

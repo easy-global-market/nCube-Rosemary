@@ -29,7 +29,7 @@ global.parent_cbname        = conf.parent.cbname;
 global.parent_cbcseid       = conf.parent.cbcseid;
 global.parent_cbhost        = conf.parent.cbhost;
 global.parent_cbhostport    = conf.parent.cbhostport;
-global.parent_cbprotocol    = conf.parent.cbprotocol;       // select 'http' or 'mqtt' when register remoteCSE
+global.parent_cbprotocol    = conf.parent.cbprotocol;       // select 'http', 'https' or 'mqtt' when register remoteCSE
 global.parent_mqttbroker    = conf.parent.mqttbroker;
 
 

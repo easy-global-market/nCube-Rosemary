@@ -52,7 +52,7 @@ npm install
     "cbcseid": "/Mobius",           //CSEbase ID
     "cbhost": "203.253.128.161",    //CSEbase host IP
     "cbhostport": "7579",           //CSEbase http hosting port
-    "cbprotocol": "http",           //CSEbase communication protocol
+    "cbprotocol": "http",           //CSEbase communication protocol (http, https or mqtt)
     "mqttbroker": "203.253.128.161" //MQTT Broker IP 
   },
   "csebaseport": "7599",            //MN-CSE HTTP hosting IP
