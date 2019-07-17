@@ -33,7 +33,7 @@ Eclipse Mosquitto™ is an open source (EPL/EDL licensed) message broker that im
 - Import SQL script<br/>
 After installation of MySQL server, you need the DB Schema for storing oneM2M resources in &Cube-Rosemary. You can find this file in the foloowing &Cube-Rosemary source directory.
 ```
-[nCube-Rosemary home]/mobius/mobiusdb.sql
+[nCube-Rosemary home]/mobius/rosemarydb.sql
 ```
 - Run Mosquitto MQTT broker<br/>
 ```

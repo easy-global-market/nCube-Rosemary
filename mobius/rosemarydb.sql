@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.12, for Win64 (x86_64)
 --
--- Host: localhost    Database: mobiusdb
+-- Host: localhost    Database: rosemarydb
 -- ------------------------------------------------------
 -- Server version	8.0.12
 
@@ -49,6 +49,7 @@ CREATE TABLE `ae` (
   `rr` varchar(45) NOT NULL,
   `nl` varchar(45) NOT NULL,
   `csz` varchar(45) DEFAULT NULL,
+  `srv` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`ri`),
   UNIQUE KEY `path_UNIQUE` (`ri`),
   UNIQUE KEY `aei_UNIQUE` (`aei`),
@@ -141,6 +142,7 @@ CREATE TABLE `csr` (
   `tri` varchar(45) NOT NULL,
   `rr` varchar(45) NOT NULL,
   `nl` varchar(45) NOT NULL,
+  `srv` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`ri`),
   UNIQUE KEY `ri_UNIQUE` (`ri`),
   KEY `csr_ri_idx` (`ri`),
